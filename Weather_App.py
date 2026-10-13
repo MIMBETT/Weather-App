@@ -8,6 +8,11 @@ from PyQt5.QtCore import Qt
 import requests
 import sys
 
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
 class Weather_app(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -106,7 +111,12 @@ class Weather_app(QMainWindow):
 
         #API setup
         city_name = self.city_line_edit.text().lower()
-        api_key = "0d62bb4a030ca2085172b22fa6295dfa"
+        api_key = os.getenv("OPENWEATHERMAP_API_KEY")
+
+        if not api_key:
+            self.display_error("API key not configured.")
+            return
+
         url = f"https://api.openweathermap.org/data/2.5/weather?q={city_name}&appid={api_key}"
         
         #Exception Handling in case of Errors
